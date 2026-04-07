@@ -1,111 +1,139 @@
-# Pixels - Animated SaaS App Template
+# Thumblify
 
-Pixels is a dark-themed SaaS template with using smooth Framer Motion animations and pink color theme, crafted for startups and modern products that want a bold and unique look with modern webite design.
-
-**Live Preview:**
-https://pixels.prebuiltui.com/
+Thumblify is a full-stack web application that recreates and generates high-quality thumbnails using AI.
+Users can upload an image or provide a URL, customize styles, and generate improved thumbnails instantly.
 
 ---
 
-## What’s Included
+## 🚀 Features
 
-This package contains:
-
-- Next.js Version
-- Structured component architecture
-- Production-ready responsive layouts
-- License file
-
-Next.js version follows best practices and is optimized for production deployment.
+* Generate thumbnails using AI
+* Multiple styles (Minimalist, Bold, Photorealistic, etc.)
+* Aspect ratio selection (1:1, 16:9, 9:16)
+* Color scheme customization
+* Real-time preview (planned)
+* Store and manage generated thumbnails
 
 ---
 
-## Core Features
+## 🛠 Tech Stack
 
-- Dark theme
-- Framer Motion animations
-- Hero section
-- Feature showcase
-- Testimonials
-- Pricing plans
-- Responsive layout
-- Modern design
+### Frontend
 
----
+* Next.js
+* React
+* Tailwind CSS
 
-## Tech Stack
+### Backend
 
+* Node.js
+* Express
+* MongoDB (Mongoose)
 
-### Next.js Version
+### AI Integration
 
-- Next.js
-- Tailwind CSS
-- Structured component architecture
-
+* Google Gemini API *(or alternative like Hugging Face)*
 
 ---
 
-## Installation Guide
+## 📁 Project Structure
 
-
-### Next.js
-
-1. Navigate to the `/nextjs` directory.
-2. Install dependencies:
-
-   npm install
-
-3. Run development server:
-
-   npm run dev
-
+```
+project-root/
+ ├── client/   # Next.js frontend
+ ├── server/   # Express backend
+```
 
 ---
 
-## License
+## ⚙️ Setup Instructions
 
-This template is licensed for single-project commercial use.
+### 1. Clone the repo
 
-Your purchase allows you to use Pixels in one end product
-intended for one business or client.
-
-You may NOT:
-
-- Resell or redistribute the source files
-- Upload to public repositories
-- Share with other developers or organizations
-- Use to create competing template products
-
-For agency usage, multi-project rights or white-label permissions,
-please contact:
-
-contact@prebuiltui.com
-
-See LICENSE.txt for full legal terms.
-
----
-## Support
-
-Support includes:
-
-- Installation guidance
-- Technical clarification
-- Minor issue resolution
-
-For assistance, contact:
-
-contact@prebuiltui.com
-
-Please include:
-
-- Template name
-- Version used (Next.js / React / HTML)
-- Node version (if applicable)
-- Clear description of the issue
+```
+git clone <your-repo-url>
+cd project-root
+```
 
 ---
 
-## © Copyright
+### 2. Setup Client
 
-Pixels © 2026 PrebuiltUI  
-All rights reserved.
+```
+cd client
+npm install
+npm run dev
+```
+
+Client will run on:
+
+```
+http://localhost:3000
+```
+
+---
+
+### 3. Setup Server
+
+```
+cd server
+npm install
+npm run dev
+```
+
+Server will run on:
+
+```
+http://localhost:5000
+```
+
+---
+
+## 🔐 Environment Variables
+
+Create `.env` file inside `server/`
+
+```
+PORT=5000
+MONGODB_URI=your_mongodb_connection
+GEMINI_API_KEY=your_api_key
+```
+
+---
+
+## 🔄 API Connection
+
+Frontend communicates with backend using:
+
+```
+http://localhost:5000
+```
+
+Make sure CORS is enabled on the server.
+
+---
+
+## 📌 Current Status
+
+* Frontend UI in progress
+* Backend setup completed
+* AI integration in progress
+
+---
+
+## 🎯 Goal
+
+Build a practical, production-ready AI tool for thumbnail generation that can be used in real-world applications.
+
+---
+
+## ⚠️ Notes
+
+* Free AI APIs may have usage limits
+* Some features may require paid API access
+
+---
+
+## 📄 License
+
+This project is for learning and portfolio purposes.
