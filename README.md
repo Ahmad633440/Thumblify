@@ -1,36 +1,139 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Thumblify
 
-## Getting Started
+Thumblify is a full-stack web application that recreates and generates high-quality thumbnails using AI.
+Users can upload an image or provide a URL, customize styles, and generate improved thumbnails instantly.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Features
+
+* Generate thumbnails using AI
+* Multiple styles (Minimalist, Bold, Photorealistic, etc.)
+* Aspect ratio selection (1:1, 16:9, 9:16)
+* Color scheme customization
+* Real-time preview (planned)
+* Store and manage generated thumbnails
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+
+* Next.js
+* React
+* Tailwind CSS
+
+### Backend
+
+* Node.js
+* Express
+* MongoDB (Mongoose)
+
+### AI Integration
+
+* Google Gemini API *(or alternative like Hugging Face)*
+
+---
+
+## 📁 Project Structure
+
+```
+project-root/
+ ├── client/   # Next.js frontend
+ ├── server/   # Express backend
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## ⚙️ Setup Instructions
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Clone the repo
 
-## Learn More
+```
+git clone <your-repo-url>
+cd project-root
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Setup Client
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+cd client
+npm install
+npm run dev
+```
 
-## Deploy on Vercel
+Client will run on:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+http://localhost:3000
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+### 3. Setup Server
+
+```
+cd server
+npm install
+npm run dev
+```
+
+Server will run on:
+
+```
+http://localhost:5000
+```
+
+---
+
+## 🔐 Environment Variables
+
+Create `.env` file inside `server/`
+
+```
+PORT=5000
+MONGODB_URI=your_mongodb_connection
+GEMINI_API_KEY=your_api_key
+```
+
+---
+
+## 🔄 API Connection
+
+Frontend communicates with backend using:
+
+```
+http://localhost:5000
+```
+
+Make sure CORS is enabled on the server.
+
+---
+
+## 📌 Current Status
+
+* Frontend UI in progress
+* Backend setup completed
+* AI integration in progress
+
+---
+
+## 🎯 Goal
+
+Build a practical, production-ready AI tool for thumbnail generation that can be used in real-world applications.
+
+---
+
+## ⚠️ Notes
+
+* Free AI APIs may have usage limits
+* Some features may require paid API access
+
+---
+
+## 📄 License
+
+This project is for learning and portfolio purposes.
