@@ -37,10 +37,20 @@ const handleGenerate = async () => {
       text_overlay: false // or add a checkbox for this
     });
 
-    if (result.success) {
-      setGeneratedThumbnail(result.data);
+    if (result.success && result.data) {
+      const thumbnailData: IThumbnail = {
+        id: result.data._id || '',
+        title: result.data.title || '',
+        image_url: result.data.image_url || '',
+        style: result.data.style || 'Bold & Graphic',
+        aspect_ratio: result.data.aspect_ratio || '16:9',
+        color_scheme: result.data.color_scheme || 'Default',
+        created_at: result.data.createdAt || new Date().toISOString(),
+        prompt_used: result.data.prompt_used || '',
+      }
+      setGeneratedThumbnail(thumbnailData);
     } else {
-      alert(result.message);
+      alert(result.message || 'Failed to generate thumbnail');
     }
   } catch (error) {
     console.error(error);

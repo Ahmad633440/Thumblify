@@ -1,26 +1,73 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Upload, Link as LinkIcon, Image as ImageIcon, ArrowRight } from 'lucide-react'
 import AspectRatioSelector from '@/components/AspectRatioSelector'
 import PreviewPanel from '@/components/PreviewPanel'
-import { AspectRatio } from '@/assets/data'
+import { AspectRatio, IThumbnail } from '@/assets/data'
+import { recreateThumbnailAction } from '@/lib/actions/thumbnail'
 
 const RecreatePage = () => {
   const [activeTab, setActiveTab] = useState<'upload' | 'url'>('upload')
   const [imageUrl, setImageUrl] = useState('')
+  const [uploadedFile, setUploadedFile] = useState<{ base64: string; name: string } | null>(null)
   const [prompt, setPrompt] = useState('')
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>('16:9')
   const [loading, setLoading] = useState(false)
-  const [generatedThumbnail, setGeneratedThumbnail] = useState(null)
+  const [generatedThumbnail, setGeneratedThumbnail] = useState<IThumbnail | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setUploadedFile({
+        base64: reader.result as string,
+        name: file.name,
+      })
+    }
+    reader.readAsDataURL(file)
+  }
 
   const handleGenerate = async () => {
-    // Logic for generating thumbnail will go here
+    const imageInput = activeTab === 'upload' ? uploadedFile?.base64 : imageUrl
+    if (!imageInput) {
+      alert('Please upload an image or paste an image URL first')
+      return
+    }
+
     setLoading(true)
-    // Simulate generation
-    setTimeout(() => {
+    try {
+      const result = await recreateThumbnailAction({
+        imageInput,
+        prompt,
+        aspect_ratio: aspectRatio,
+      })
+
+      if (result.success && result.data) {
+        // Map the backend Mongoose model response to IThumbnail props if needed
+        const thumbnailData: IThumbnail = {
+          id: result.data._id || '',
+          title: result.data.title || '',
+          image_url: result.data.image_url || '',
+          style: result.data.style || 'Bold & Graphic',
+          aspect_ratio: result.data.aspect_ratio || '16:9',
+          color_scheme: result.data.color_scheme || 'Default',
+          created_at: result.data.createdAt || new Date().toISOString(),
+          prompt_used: result.data.prompt_used || '',
+        }
+        setGeneratedThumbnail(thumbnailData)
+      } else {
+        alert(result.message || 'Failed to generate thumbnail')
+      }
+    } catch (error: any) {
+      console.error(error)
+      alert(error.message || 'Something went wrong')
+    } finally {
       setLoading(false)
-    }, 2000)
+    }
   }
 
   return (
@@ -62,13 +109,30 @@ const RecreatePage = () => {
           {/* Upload / URL Content */}
           <div className='space-y-4'>
             {activeTab === 'upload' ? (
-              <div className='group relative cursor-pointer'>
-                <div className='flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-white/10 rounded-2xl bg-white/5 hover:bg-white/10 hover:border-pink-500/50 transition-all'>
-                  <div className='flex flex-col items-center justify-center pt-5 pb-6 text-zinc-400 group-hover:text-pink-400'>
-                    <ImageIcon size={32} className='mb-2' />
-                    <p className='text-sm'>Click to upload image</p>
-                  </div>
-                  <input type='file' className='hidden' />
+              <div 
+                onClick={() => fileInputRef.current?.click()}
+                className='group relative cursor-pointer'
+              >
+                <div className='flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-white/10 rounded-2xl bg-white/5 hover:bg-white/10 hover:border-pink-500/50 transition-all p-4'>
+                  {uploadedFile ? (
+                    <div className='flex flex-col items-center text-center'>
+                      <img src={uploadedFile.base64} alt="Uploaded thumbnail" className='h-12 w-20 object-cover rounded-md mb-1 border border-white/10' />
+                      <p className='text-xs text-zinc-300 truncate max-w-[200px]'>{uploadedFile.name}</p>
+                      <p className='text-[10px] text-zinc-500 hover:text-pink-400 mt-0.5'>Click to change image</p>
+                    </div>
+                  ) : (
+                    <div className='flex flex-col items-center justify-center pt-5 pb-6 text-zinc-400 group-hover:text-pink-400'>
+                      <ImageIcon size={32} className='mb-2' />
+                      <p className='text-sm'>Click to upload image</p>
+                    </div>
+                  )}
+                  <input 
+                    type='file' 
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    className='hidden' 
+                  />
                 </div>
               </div>
             ) : (
@@ -102,7 +166,7 @@ const RecreatePage = () => {
 
           {/* Credit Info */}
           <div className='text-center'>
-            <p className='text-xs text-zinc-500 uppercase tracking-widest'>10 Credits / per thumbnail generation</p>
+            <p className='text-xs text-zinc-300 tracking-widest '>10 Credits / per thumbnail generation</p>
           </div>
 
           {/* Action Button */}
@@ -126,16 +190,11 @@ const RecreatePage = () => {
         <div className='flex-1 w-full space-y-6'>
           <div className='p-6 sm:p-8 rounded-3xl bg-zinc-900/50 border border-white/10 backdrop-blur-xl shadow-2xl min-h-[500px] flex flex-col'>
             <div className='flex items-center justify-between mb-8'>
-              <h2 className='text-2xl font-bold text-white'>Preview</h2>
-              <div className='flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-800 border border-white/5'>
-                <div className='size-2 rounded-full bg-pink-500 animate-pulse'></div>
-                <span className='text-[10px] text-zinc-400 font-medium uppercase tracking-tighter'>Live Rendering</span>
-              </div>
-            </div>
+              <h2 className='text-2xl font-bold text-white'>Preview</h2></div>
 
-            <div className='flex-1 flex items-center justify-center border-2 border-dashed border-white/5 rounded-2xl bg-black/20 p-8'>
+           
               <PreviewPanel thumbnail={generatedThumbnail} isLoading={loading} aspectRatio={aspectRatio} />
-            </div>
+           
           </div>
         </div>
       </main>

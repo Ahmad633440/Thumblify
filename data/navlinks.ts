@@ -11,7 +11,7 @@ export const navlinks: INavLink[] = [
     { name: "Generate", href: "#",
       subLinks: [
         {name: "Generate Thumbnail", href: "/generate"},
-        {name: "Create Thumbnail", href: "/recreate"}
+        {name: "Recreate Thumbnail", href: "/recreate"}
       ]
      },
     { name: "Library", href: "/myGenerationPage" },

@@ -1,6 +1,7 @@
 'use client'
 import { IThumbnail } from '@/assets/data'
 import { useEffect, useState } from 'react'
+import { getThumbnailsAction, deleteThumbnailAction } from '@/lib/actions/thumbnail'
 
 const page = () => {
 
@@ -9,36 +10,27 @@ const page = () => {
 
   const fetchThumbnails = async () => {
     setLoading(true)
-    // TODO: Replace with actual API call
-    // const response = await fetch('/api/thumbnails')
-    // const data = await response.json()
-    // setThumbnails(data)
-
-    // Temporary mock data
-    setTimeout(() => {
-      const mockThumbnails: IThumbnail[] = [
-        {
-          id: '1',
-          title: 'Sample Thumbnail 1',
-          image_url: 'https://picsum.photos/400/225?random=1',
-          style: 'Bold & Graphic',
-          aspect_ratio: '16:9',
-          color_scheme: 'default',
-          created_at: new Date().toISOString()
-        },
-        {
-          id: '2',
-          title: 'Sample Thumbnail 2',
-          image_url: 'https://picsum.photos/400/225?random=2',
-          style: 'Minimalist',
-          aspect_ratio: '1:1',
-          color_scheme: 'dark',
-          created_at: new Date().toISOString()
-        }
-      ]
-      setThumbnails(mockThumbnails)
+    try {
+      const result = await getThumbnailsAction()
+      if (result.success && result.data) {
+        const mappedThumbnails: IThumbnail[] = result.data.map((item: any) => ({
+          id: item._id,
+          title: item.title,
+          image_url: item.image_url || '',
+          style: item.style || 'Bold & Graphic',
+          aspect_ratio: item.aspect_ratio || '16:9',
+          color_scheme: item.color_scheme || 'Default',
+          created_at: item.createdAt || new Date().toISOString()
+        }))
+        setThumbnails(mappedThumbnails)
+      } else {
+        console.error(result.message || 'Failed to fetch thumbnails')
+      }
+    } catch (error) {
+      console.error('Error fetching thumbnails:', error)
+    } finally {
       setLoading(false)
-    }, 1000)
+    }
   }
 
   const handleDownload = async (imageUrl: string) => {
@@ -46,11 +38,17 @@ const page = () => {
   }
 
   const handleDelete = async (id: string) => {
-    console.log('Deleting thumbnail with id:', id)
-    // TODO: Implement actual delete API call
-    // await fetch(`/api/thumbnails/${id}`, { method: 'DELETE' })
-    // Then update local state
-    setThumbnails(prev => prev.filter(t => t.id !== id))
+    try {
+      const result = await deleteThumbnailAction(id)
+      if (result.success) {
+        setThumbnails(prev => prev.filter(t => t.id !== id))
+      } else {
+        alert('Failed to delete thumbnail')
+      }
+    } catch (error) {
+      console.error('Error deleting thumbnail:', error)
+      alert('Error deleting thumbnail')
+    }
   }
 
   useEffect(() => {
