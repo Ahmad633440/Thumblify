@@ -105,7 +105,7 @@ const Generate = () => {
                   className='input-primary'
                   onChange={(e) => setTitle(e.target.value)}
                   maxLength={100}
-                  placeholder='Enter your Title here'
+                  placeholder='Enter the title for your thumbnail...'
                 />
                 <div className='flex justify-end'>
                   <span className='text-xs text-zinc-500'>{title.length}/100</span>
